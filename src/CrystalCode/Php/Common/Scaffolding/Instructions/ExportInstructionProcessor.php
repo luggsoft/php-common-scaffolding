@@ -23,11 +23,12 @@ final class ExportInstructionProcessor extends InstructionProcessorBase
      */
     public function handleCreateFileInstruction(CreateFileInstruction $createFileInstruction)
     {
+        $eol = PHP_EOL;
         $path = $createFileInstruction->getPath();
         $data = $createFileInstruction->getData();
         $line = vsprintf('New-Item -Force -Path "%s" -ItemType File -Value @"%s"@;', [
             $this->escapePowerShellString(trim($path)),
-            $this->escapePowerShellString(trim($data)) . PHP_EOL,
+            $eol . $this->escapePowerShellString(trim($data)) . $eol,
         ]);
         $this->writeLine($line);
         return true;

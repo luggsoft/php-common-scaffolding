@@ -3,124 +3,180 @@
 namespace CrystalCode\Php\Common\Scaffolding;
 
 use CrystalCode\Php\Common\Collections\Collection;
-use CrystalCode\Php\Common\Templates\DefaultTemplateRenderer;
-use CrystalCode\Php\Common\Templates\TemplateBase;
-use CrystalCode\Php\Common\Templates\TemplateContextInterface;
-use CrystalCode\Php\Common\Templates\TemplateInterface;
+use CrystalCode\Php\Common\Injectors\Injector;
+use CrystalCode\Php\Common\Injectors\InjectorInterface;
+use CrystalCode\Php\Common\Scaffolding\Instructions\ExportInstructionProcessor;
+use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionProcessorInterface;
+use CrystalCode\Php\Common\Scaffolding\Templates\CtrlTemplateTemplate;
+use CrystalCode\Php\Common\Scaffolding\Templates\TemplateFileItem;
 
 require_once sprintf('%s/../../../../../vendor/autoload.php', __DIR__);
 
-/**
- * 
- * @param string $string
- * @param mixed $values
- * @return string
- */
-function interpolate($string, $values)
+interface ScaffolderInterface
 {
-    $values = Collection::create($values)->toArray();
-    return preg_replace_callback('({(?<name>\w+)})i', function (array $match) use ($values) {
-        if (isset($values[$match['name']])) {
-            return (string) $values[$match['name']];
-        }
-        return (string) null;
-    }, $string);
+
+    /**
+     * 
+     * @return void
+     */
+    function scaffold();
+
 }
 
-/**
- * 
- * @return ItemInterface
- */
-function get_item()
+abstract class ScaffolderBase implements ScaffolderInterface
 {
-    return new DirectoryItem('Templates', function () {
-        yield new DirectoryItem('Public', function () {
-            yield new DefaultFileItem('PublicStateCtrlTemplate.php');
-            yield new DefaultFileItem('PublicStateHtmlTemplate.php');
-            yield new DefaultFileItem('PublicStateScssTemplate.php');
-            yield new DirectoryItem('About', function () {
-                yield new DefaultFileItem('AboutStateCtrlTemplate.php');
-                yield new DefaultFileItem('AboutStateHtmlTemplate.php');
-                yield new DefaultFileItem('AboutStateScssTemplate.php');
+
+    /**
+     * 
+     * @return void
+     */
+    final public function scaffold()
+    {
+        $items = $this->getItems();
+        $itemProcessor = $this->getItemProcessor();
+        $instructionProcessor = $this->getInstructionProcessor();
+        foreach (Collection::create($items) as $item) {
+            $instructions = $itemProcessor->processItem($item);
+            foreach (Collection::create($instructions) as $instruction) {
+                $instructionProcessor->processInstruction($instruction);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @return ItemInterface[]
+     */
+    abstract public function getItems();
+
+    /**
+     * 
+     * @return ItemProcessorInterface
+     */
+    abstract public function getItemProcessor();
+
+    /**
+     * 
+     * @return InstructionProcessorInterface
+     */
+    abstract public function getInstructionProcessor();
+
+}
+
+final class DefaultScaffolder extends ScaffolderBase
+{
+
+    /**
+     *
+     * @var InjectorInterface
+     */
+    private $injector;
+
+    /**
+     * 
+     * @param InjectorInterface $injector
+     */
+    public function __construct(InjectorInterface $injector)
+    {
+        $this->injector = $injector;
+    }
+
+    /**
+     * 
+     * @return ItemInterface[]
+     */
+    public function getItems()
+    {
+        yield new DefaultDirectoryItem('Templates', function () {
+            yield new DefaultDirectoryItem('Public', function () {
+                yield new TemplateFileItem('PublicStateCtrlTemplate', 'php');
+                yield new TemplateFileItem('PublicStateHtmlTemplate', 'php');
+                yield new DefaultDirectoryItem('About', function () {
+                    yield new TemplateFileItem('AboutStateCtrlTemplate', 'php');
+                    yield new TemplateFileItem('AboutStateHtmlTemplate', 'php');
+                });
+                yield new DefaultDirectoryItem('Login', function () {
+                    yield new TemplateFileItem('LoginStateCtrlTemplate', 'php');
+                    yield new TemplateFileItem('LoginStateHtmlTemplate', 'php');
+                });
             });
-            yield new DirectoryItem('Login', function () {
-                yield new DefaultFileItem('LoginStateCtrlTemplate.php');
-                yield new DefaultFileItem('LoginStateHtmlTemplate.php');
-                yield new DefaultFileItem('LoginStateScssTemplate.php');
+            yield new DefaultDirectoryItem('Private', function () {
+                yield new TemplateFileItem('PrivateStateCtrlTemplate', 'php');
+                yield new TemplateFileItem('PrivateStateHtmlTemplate', 'php');
+                yield new DefaultDirectoryItem('Management', function () {
+                    yield new TemplateFileItem('ManagementStateCtrlTemplate', 'php');
+                    yield new TemplateFileItem('ManagementStateHtmlTemplate', 'php');
+                    yield new DefaultDirectoryItem('Dashboard', function () {
+                        yield new TemplateFileItem('DashboardStateCtrlTemplate', 'php');
+                        yield new TemplateFileItem('DashboardStateHtmlTemplate', 'php');
+                    });
+                    yield new DefaultDirectoryItem('Entity', function () {
+                        yield new TemplateFileItem('EntityStateCtrlTemplate', 'php');
+                        yield new TemplateFileItem('EntityStateHtmlTemplate', 'php');
+                        yield new DefaultDirectoryItem('Select', function () {
+                            yield new TemplateFileItem('SelectStateCtrlTemplate', 'php');
+                            yield new TemplateFileItem('SelectStateHtmlTemplate', 'php');
+                        });
+                        yield new DefaultDirectoryItem('Create', function () {
+                            yield new TemplateFileItem('CreateStateCtrlTemplate', 'php');
+                            yield new TemplateFileItem('CreateStateHtmlTemplate', 'php');
+                        });
+                        yield new DefaultDirectoryItem('Detail', function () {
+                            yield new TemplateFileItem('DetailStateCtrlTemplate', 'php');
+                            yield new TemplateFileItem('DetailStateHtmlTemplate', 'php');
+                            yield new DefaultDirectoryItem('View', function () {
+                                yield new TemplateFileItem('ViewStateCtrlTemplate', 'php');
+                                yield new TemplateFileItem('ViewStateHtmlTemplate', 'php');
+                            });
+                            yield new DefaultDirectoryItem('Edit', function () {
+                                yield new TemplateFileItem('EditStateCtrlTemplate', 'php');
+                                yield new TemplateFileItem('EditStateHtmlTemplate', 'php');
+                            });
+                        });
+                    });
+                    yield new DefaultDirectoryItem('Account', function () {
+                        yield new TemplateFileItem('AccountStateCtrlTemplate', 'php');
+                        yield new TemplateFileItem('AccountStateHtmlTemplate', 'php');
+                        yield new DefaultDirectoryItem('Profile', function () {
+                            yield new TemplateFileItem('ProfileStateCtrlTemplate', 'php');
+                            yield new TemplateFileItem('ProfileStateHtmlTemplate', 'php');
+                        });
+                        yield new DefaultDirectoryItem('Settings', function () {
+                            yield new TemplateFileItem('SettingsStateCtrlTemplate', 'php');
+                            yield new TemplateFileItem('SettingsStateHtmlTemplate', 'php');
+                        });
+                    });
+                });
             });
         });
-        yield new DirectoryItem('Private', function () {
-            yield new DefaultFileItem('PrivateStateCtrlTemplate.php');
-            yield new DefaultFileItem('PrivateStateHtmlTemplate.php');
-            yield new DefaultFileItem('PrivateStateScssTemplate.php');
-            yield new DirectoryItem('Management', function () {
-                yield new DefaultFileItem('ManagementStateCtrlTemplate.php');
-                yield new DefaultFileItem('ManagementStateHtmlTemplate.php');
-                yield new DefaultFileItem('ManagementStateScssTemplate.php');
-                yield new DirectoryItem('Dashboard', function () {
-                    yield new DefaultFileItem('DashboardStateCtrlTemplate.php');
-                    yield new DefaultFileItem('DashboardStateHtmlTemplate.php');
-                    yield new DefaultFileItem('DashboardStateScssTemplate.php');
-                });
-                yield new DirectoryItem('Entity', function () {
-                    yield new DefaultFileItem('EntityStateCtrlTemplate.php');
-                    yield new DefaultFileItem('EntityStateHtmlTemplate.php');
-                    yield new DefaultFileItem('EntityStateScssTemplate.php');
-                    yield new DirectoryItem('Select', function () {
-                        yield new DefaultFileItem('SelectStateCtrlTemplate.php');
-                        yield new DefaultFileItem('SelectStateHtmlTemplate.php');
-                        yield new DefaultFileItem('SelectStateScssTemplate.php');
-                    });
-                    yield new DirectoryItem('Create', function () {
-                        yield new DefaultFileItem('CreateStateCtrlTemplate.php');
-                        yield new DefaultFileItem('CreateStateHtmlTemplate.php');
-                        yield new DefaultFileItem('CreateStateScssTemplate.php');
-                    });
-                    yield new DirectoryItem('Detail', function () {
-                        yield new DefaultFileItem('DetailStateCtrlTemplate.php');
-                        yield new DefaultFileItem('DetailStateHtmlTemplate.php');
-                        yield new DefaultFileItem('DetailStateScssTemplate.php');
-                        yield new DirectoryItem('View', function () {
-                            yield new DefaultFileItem('ViewStateCtrlTemplate.php');
-                            yield new DefaultFileItem('ViewStateHtmlTemplate.php');
-                            yield new DefaultFileItem('ViewStateScssTemplate.php');
-                        });
-                        yield new DirectoryItem('Edit', function () {
-                            yield new DefaultFileItem('EditStateCtrlTemplate.php');
-                            yield new DefaultFileItem('EditStateHtmlTemplate.php');
-                            yield new DefaultFileItem('EditStateScssTemplate.php');
-                        });
-                    });
-                });
-                yield new DirectoryItem('Account', function () {
-                    yield new DefaultFileItem('AccountStateCtrlTemplate.php');
-                    yield new DefaultFileItem('AccountStateHtmlTemplate.php');
-                    yield new DefaultFileItem('AccountStateScssTemplate.php');
-                    yield new DirectoryItem('Profile', function () {
-                        yield new DefaultFileItem('ProfileStateCtrlTemplate.php');
-                        yield new DefaultFileItem('ProfileStateHtmlTemplate.php');
-                        yield new DefaultFileItem('ProfileStateScssTemplate.php');
-                    });
-                    yield new DirectoryItem('Settings', function () {
-                        yield new DefaultFileItem('SettingsStateCtrlTemplate.php');
-                        yield new DefaultFileItem('SettingsStateHtmlTemplate.php');
-                        yield new DefaultFileItem('SettingsStateScssTemplate.php');
-                    });
-                });
-            });
-        });
-    });
+    }
+
+    /**
+     * 
+     * @return DefaultItemProcessor
+     */
+    public function getItemProcessor()
+    {
+        return new DefaultItemProcessor($this->injector);
+    }
+
+    /**
+     * 
+     * @return InstructionProcessorInterface
+     */
+    public function getInstructionProcessor()
+    {
+        return new ExportInstructionProcessor($this->injector);
+    }
+
 }
 
 function main()
 {
-    $item = get_item();
-    $templateRenderer = new DefaultTemplateRenderer();
-    $itemProcessor = new DefaultItemProcessor($templateRenderer);
-    $instructions = $itemProcessor->processItem($item);
-    foreach (Collection::create($instructions) as $instruction) {
-        echo $instruction->toString() . PHP_EOL;
-    }
+    $injector = new Injector();
+    $scaffolder = new DefaultScaffolder($injector);
+    $scaffolder->scaffold();
+    ;
 }
 
 main();

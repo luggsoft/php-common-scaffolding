@@ -7,6 +7,7 @@ use CrystalCode\Php\Common\Injectors\InjectorInterface;
 use CrystalCode\Php\Common\Scaffolding\Instructions\CreateDirectoryInstruction;
 use CrystalCode\Php\Common\Scaffolding\Instructions\CreateFileInstruction;
 use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionInterface;
+use CrystalCode\Php\Common\Templates\DefaultTemplateRenderer;
 use CrystalCode\Php\Common\Templates\TemplateRendererInterface;
 
 final class DefaultItemProcessor extends ItemProcessorBase
@@ -19,47 +20,67 @@ final class DefaultItemProcessor extends ItemProcessorBase
     private $templateRenderer;
 
     /**
+     *
+     * @var array|InstructionInterface[]
+     */
+    private $instructions = [];
+
+    /**
      * 
      * @param InjectorInterface $injector
      * @param callable[] $handlers
+     * @param TemplateRendererInterface $templateRenderer
      */
-    public function __construct(InjectorInterface $injector, $handlers = [])
+    public function __construct(InjectorInterface $injector, $handlers = [], TemplateRendererInterface $templateRenderer = null)
     {
         parent::__construct($injector, $handlers);
-        $this->templateRenderer = $injector->create(TemplateRendererInterface::class);
+        if ($templateRenderer === null) {
+            $templateRenderer = $injector->create(DefaultTemplateRenderer::class);
+        }
+        $this->templateRenderer = $templateRenderer;
     }
 
     /**
      * 
-     * @param DefaultFileItem $fileItem
-     * @return InstructionInterface[]
+     * @param FileItemBase $fileItem
+     * @return mixed
      */
-    public function handleFileItem(DefaultFileItem $fileItem)
+    public function handleFileItem(FileItemBase $fileItem)
     {
-        $ancestorItems = $fileItem->getAncestorItems(true);
         $template = $fileItem->getTemplate();
-        yield new CreateFileInstruction([
-            'path' => $this->getPath($ancestorItems),
+        $ancestorItems = $fileItem->getAncestorItems(true);
+        $this->instructions[] = new CreateFileInstruction([
+            'path' => vsprintf('%s.%s', [
+                $this->getPath($ancestorItems),
+                $fileItem->getExtension(),
+            ]),
             'data' => $this->templateRenderer->renderTemplate($template),
         ]);
     }
 
     /**
      * 
-     * @param DefaultDirectoryItem $directoryItem
+     * @param DirectoryItemBase $directoryItem
      * @return InstructionInterface[]
      */
-    public function handleDirectoryItem(DefaultDirectoryItem $directoryItem)
+    public function handleDirectoryItem(DirectoryItemBase $directoryItem)
     {
         $ancestorItems = $directoryItem->getAncestorItems(true);
-        yield new CreateDirectoryInstruction([
+        $this->instructions[] = new CreateDirectoryInstruction([
             'path' => $this->getPath($ancestorItems),
         ]);
         foreach ($directoryItem->getChildItems() as $childItem) {
-            foreach ($this->processItem($childItem) as $instruction) {
-                yield $instruction;
-            }
+            $this->processItem($childItem);
         }
+    }
+
+    /**
+     * 
+     * @return array|InstructionInterface[]
+     */
+    public function getInstructions()
+    {
+        return $this->instructions;
     }
 
     /**
@@ -67,7 +88,7 @@ final class DefaultItemProcessor extends ItemProcessorBase
      * @param ItemInterface[] $items
      * @return string
      */
-    public function getPath($items)
+    private function getPath($items)
     {
         $segments = [];
         foreach (Collection::create($items) as $item) {

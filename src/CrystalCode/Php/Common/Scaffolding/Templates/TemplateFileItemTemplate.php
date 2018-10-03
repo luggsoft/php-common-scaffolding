@@ -2,26 +2,19 @@
 
 namespace CrystalCode\Php\Common\Scaffolding\Templates;
 
-use CrystalCode\Php\Common\Scaffolding\DefaultFileItem;
-use CrystalCode\Php\Common\Templates\TemplateBase;
+use CrystalCode\Php\Common\Scaffolding\FileItemBase;
 use CrystalCode\Php\Common\Templates\TemplateContextInterface;
 
-final class ScssTemplateTemplate extends TemplateBase
+final class TemplateFileItemTemplate extends FileItemTemplateBase
 {
 
     /**
-     *
-     * @var DefaultFileItem
-     */
-    private $fileItem;
-
-    /**
      * 
-     * @param DefaultFileItem $fileItem
+     * @param FileItemBase $fileItem
      */
-    public function __construct(DefaultFileItem $fileItem)
+    public function __construct(FileItemBase $fileItem)
     {
-        $this->fileItem = $fileItem;
+        parent::__construct($fileItem);
     }
 
     /**
@@ -36,8 +29,11 @@ final class ScssTemplateTemplate extends TemplateBase
         <?= '<?php' ?> 
 
         namespace <?= $this->getNamespaceName() ?>;
+        
+        use CrystalCode\Php\Common\Templates\TemplateBase;
+        use CrystalCode\Php\Common\Templates\TemplateContextInterface;
 
-        final class <?= $this->getClassName() ?> 
+        final class <?= $this->getClassName() ?> extends TemplateBase
         {
 
             /**
@@ -47,13 +43,11 @@ final class ScssTemplateTemplate extends TemplateBase
              */
             protected function execute(TemplateContextInterface $templateContext)
             {
-
                 <?= '?>' ?> 
 
                 <?= $this->getNamespaceName() ?>\<?= $this->getClassName() ?>;
 
                 <?= '<?php' ?> 
-
             }
 
         }
@@ -65,25 +59,22 @@ final class ScssTemplateTemplate extends TemplateBase
      * 
      * @return string
      */
-    private function getClassName()
+    public function getClassName()
     {
-        $name = $this->fileItem->getName();
-        return basename($name, '.php');
+        return $this->getFileItem()->getName();
     }
 
     /**
      * 
      * @return string
      */
-    private function getNamespaceName()
+    public function getNamespaceName()
     {
-        $segments = [];
-        foreach ($this->fileItem->getAncestorItems(true) as $ancestorItem) {
-            $segment = $ancestorItem->getName();
-            $segments[] = $segment;
+        $nameSegments = [];
+        foreach ($this->getFileItem()->getAncestorItems(false) as $item) {
+            $nameSegments[] = $item->getName();
         }
-        array_pop($segments);
-        return implode('\\', $segments);
+        return implode('\\', $nameSegments);
     }
 
 }

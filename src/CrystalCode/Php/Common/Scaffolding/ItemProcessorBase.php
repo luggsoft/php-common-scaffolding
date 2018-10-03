@@ -3,6 +3,7 @@
 namespace CrystalCode\Php\Common\Scaffolding;
 
 use CrystalCode\Php\Common\Collections\Collection;
+use CrystalCode\Php\Common\Injectors\AliasDefinition;
 use CrystalCode\Php\Common\Injectors\InjectorInterface;
 use CrystalCode\Php\Common\Injectors\InstanceDefinition;
 use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionInterface;
@@ -32,8 +33,8 @@ abstract class ItemProcessorBase implements ItemProcessorInterface
     {
         $this->injector = $injector;
         $this->addItemHandlers($handlers + [
-            DefaultFileItem::class => [$this, 'handleFileItem'],
-            DefaultDirectoryItem::class => [$this, 'handleDirectoryItem'],
+            FileItemBase::class => [$this, 'handleFileItem'],
+            DirectoryItemBase::class => [$this, 'handleDirectoryItem'],
         ]);
     }
 
@@ -57,47 +58,67 @@ abstract class ItemProcessorBase implements ItemProcessorInterface
      */
     final public function addItemHandler($className, callable $handler)
     {
-        $this->handlers[(string) $className] = function (ItemInterface $item) use ($handler) {
-            $definition = new InstanceDefinition($item);
-            $instructions = $this->injector->withDefinition($definition)->call($handler);
-            foreach (Collection::create($instructions) as $instruction) {
-                yield $instruction;
-            }
+        $this->handlers[(string) $className] = function (ItemInterface $item) use ($className, $handler) {
+            $definitions = [
+                new InstanceDefinition($item),
+                new AliasDefinition($className, get_class($item)),
+            ];
+            $this->injector->withDefinitions($definitions)->call($handler);
+            // $instructions = $this->injector->withDefinitions($definitions)->call($handler);
+            // foreach (Collection::create($instructions) as $instruction) {
+            //     yield $instruction;
+            // }
         };
     }
 
     /**
      * 
      * @param ItemInterface $item
-     * @return InstructionInterface[]
+     * @return mixed
      * @throws Exception
      */
     final public function processItem(ItemInterface $item)
     {
-        $className = get_class($item);
-        if (isset($this->handlers[$className])) {
-            $handler = $this->handlers[$className];
-            $instructions = call_user_func($handler, $item);
-            foreach (Collection::create($instructions) as $instruction) {
-                yield $instruction;
-            }
-            return;
-        }
-        throw new Exception();
+        $handler = $this->getItemHandler($item);
+        call_user_func($handler, $item);
+        // $instructions = call_user_func($handler, $item);
+        // foreach (Collection::create($instructions) as $instruction) {
+        //     yield $instruction;
+        // }
     }
 
     /**
      * 
-     * @param DefaultFileItem $fileItem
-     * @return InstructionInterface[]
+     * @param string $className
+     * @return callable
+     * @throws Exception
      */
-    abstract protected function handleFileItem(DefaultFileItem $fileItem);
+    final public function getItemHandler(ItemInterface $item)
+    {
+        $className = get_class($item);
+        while (true) {
+            if (isset($this->handlers[$className])) {
+                return $this->handlers[$className];
+            }
+            $className = get_parent_class($className);
+            if (empty($className)) {
+                throw new Exception();
+            }
+        }
+    }
 
     /**
      * 
-     * @param DefaultDirectoryItem $directoryItem
-     * @return InstructionInterface[]
+     * @param FileItemBase $fileItem
+     * @return void
      */
-    abstract protected function handleDirectoryItem(DefaultDirectoryItem $directoryItem);
+    abstract protected function handleFileItem(FileItemBase $fileItem);
+
+    /**
+     * 
+     * @param DirectoryItemBase $directoryItem
+     * @return void
+     */
+    abstract protected function handleDirectoryItem(DirectoryItemBase $directoryItem);
 
 }

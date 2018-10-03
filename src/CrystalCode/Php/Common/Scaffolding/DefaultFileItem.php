@@ -16,11 +16,13 @@ final class DefaultFileItem extends FileItemBase
     /**
      * 
      * @param string $name
+     * @param callable $templateProvider
      */
-    public function __construct($name, TemplateInterface $template)
+    public function __construct($name, callable $templateProvider)
     {
         parent::__construct($name);
-        $this->template = $template;
+        $template = call_user_func($templateProvider, $this);
+        $this->setTemplate($template);
     }
 
     /**
@@ -30,6 +32,16 @@ final class DefaultFileItem extends FileItemBase
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * 
+     * @param TemplateInterface $template
+     * @return void
+     */
+    private function setTemplate(TemplateInterface $template)
+    {
+        $this->template = $template;
     }
 
 }
