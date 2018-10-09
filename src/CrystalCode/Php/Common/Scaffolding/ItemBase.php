@@ -38,7 +38,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @return string
+     * {@inheritdoc}
      */
     final public function getName()
     {
@@ -47,7 +47,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @return bool
+     * {@inheritdoc}
      */
     final public function hasParentItem()
     {
@@ -56,7 +56,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @return ItemInterface
+     * {@inheritdoc}
      */
     final public function getParentItem()
     {
@@ -65,8 +65,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @param bool $includeSelf
-     * @return array|ItemInterface[]
+     * {@inheritdoc}
      */
     final public function getAncestorItems($includeSelf = true)
     {
@@ -102,8 +101,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @param mixed $values
-     * @return ItemInterface
+     * {@inheritdoc}
      */
     final public function withValues($values)
     {
@@ -114,9 +112,7 @@ abstract class ItemBase implements ItemInterface
 
     /**
      * 
-     * @param string $name
-     * @param mixed $value
-     * @return ItemInterface
+     * {@inheritdoc}
      */
     final public function withValue($name, $value)
     {

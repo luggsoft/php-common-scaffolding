@@ -3,7 +3,6 @@
 namespace CrystalCode\Php\Common\Scaffolding\Instructions;
 
 use CrystalCode\Php\Common\Collections\Collection;
-use function CrystalCode\Php\Common\Scaffolding\interpolate;
 
 final class CreateDirectoryInstruction extends InstructionBase
 {

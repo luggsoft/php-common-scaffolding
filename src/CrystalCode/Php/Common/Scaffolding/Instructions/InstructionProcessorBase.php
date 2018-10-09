@@ -36,9 +36,7 @@ abstract class InstructionProcessorBase implements InstructionProcessorInterface
 
     /**
      * 
-     * @param InstructionInterface $instruction
-     * @return bool
-     * @throws Exception
+     * {@inheritdoc}
      */
     final public function processInstruction(InstructionInterface $instruction)
     {

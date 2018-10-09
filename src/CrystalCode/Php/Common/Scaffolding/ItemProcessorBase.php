@@ -6,7 +6,6 @@ use CrystalCode\Php\Common\Collections\Collection;
 use CrystalCode\Php\Common\Injectors\AliasDefinition;
 use CrystalCode\Php\Common\Injectors\InjectorInterface;
 use CrystalCode\Php\Common\Injectors\InstanceDefinition;
-use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionInterface;
 use Exception;
 
 abstract class ItemProcessorBase implements ItemProcessorInterface
@@ -73,9 +72,7 @@ abstract class ItemProcessorBase implements ItemProcessorInterface
 
     /**
      * 
-     * @param ItemInterface $item
-     * @return mixed
-     * @throws Exception
+     * {@inheritdoc}
      */
     final public function processItem(ItemInterface $item)
     {
@@ -89,7 +86,7 @@ abstract class ItemProcessorBase implements ItemProcessorInterface
 
     /**
      * 
-     * @param string $className
+     * @param ItemInterface $item
      * @return callable
      * @throws Exception
      */

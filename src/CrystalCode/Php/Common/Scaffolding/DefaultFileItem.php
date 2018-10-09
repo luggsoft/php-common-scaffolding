@@ -27,7 +27,7 @@ final class DefaultFileItem extends FileItemBase
 
     /**
      * 
-     * @return TemplateInterface
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
