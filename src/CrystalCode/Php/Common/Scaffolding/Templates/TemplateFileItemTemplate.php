@@ -19,8 +19,7 @@ final class TemplateFileItemTemplate extends FileItemTemplateBase
 
     /**
      * 
-     * @param TemplateContextInterface $templateContext
-     * @return void
+     * {@inheritdoc}
      */
     protected function execute(TemplateContextInterface $templateContext)
     {

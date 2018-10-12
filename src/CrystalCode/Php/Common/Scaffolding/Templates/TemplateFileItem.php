@@ -19,7 +19,7 @@ final class TemplateFileItem extends FileItemBase
 
     /**
      * 
-     * @return TemplateFileItemTemplate
+     * {@inheritdoc}
      */
     public function getTemplate()
     {

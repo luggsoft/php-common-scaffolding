@@ -42,8 +42,7 @@ final class DefaultItemProcessor extends ItemProcessorBase
 
     /**
      * 
-     * @param FileItemBase $fileItem
-     * @return mixed
+     * {@inheritdoc}
      */
     public function handleFileItem(FileItemBase $fileItem)
     {
@@ -60,8 +59,7 @@ final class DefaultItemProcessor extends ItemProcessorBase
 
     /**
      * 
-     * @param DirectoryItemBase $directoryItem
-     * @return InstructionInterface[]
+     * {@inheritdoc}
      */
     public function handleDirectoryItem(DirectoryItemBase $directoryItem)
     {

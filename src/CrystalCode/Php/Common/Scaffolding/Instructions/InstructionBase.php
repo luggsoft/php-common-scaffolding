@@ -15,8 +15,7 @@ abstract class InstructionBase implements InstructionInterface
 
     /**
      * 
-     * @param string $name
-     * @return bool
+     * {@inheritdoc}
      */
     final public function hasValue($name)
     {
@@ -25,8 +24,7 @@ abstract class InstructionBase implements InstructionInterface
 
     /**
      * 
-     * @param string $name
-     * @return mixed
+     * {@inheritdoc}
      */
     final public function getValue($name)
     {
@@ -38,9 +36,7 @@ abstract class InstructionBase implements InstructionInterface
 
     /**
      * 
-     * @param string $name
-     * @param mixed $value
-     * @return InstructionInterface
+     * {@inheritdoc}
      */
     final public function withValue($name, $value)
     {
@@ -51,8 +47,7 @@ abstract class InstructionBase implements InstructionInterface
 
     /**
      * 
-     * @param mixed $values
-     * @return InstructionInterface
+     * {@inheritdoc}
      */
     final public function withValues($values)
     {
