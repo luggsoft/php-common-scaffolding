@@ -7,7 +7,6 @@ use CrystalCode\Php\Common\Injectors\Injector;
 use CrystalCode\Php\Common\Injectors\InjectorInterface;
 use CrystalCode\Php\Common\Scaffolding\Instructions\ExportInstructionProcessor;
 use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionProcessorInterface;
-use CrystalCode\Php\Common\Scaffolding\Templates\CtrlTemplateTemplate;
 use CrystalCode\Php\Common\Scaffolding\Templates\TemplateFileItem;
 
 require_once sprintf('%s/../../../../../vendor/autoload.php', __DIR__);

@@ -4,9 +4,9 @@ use CrystalCode\Php\Common\Injectors\AliasDefinition;
 use CrystalCode\Php\Common\Injectors\Injector;
 use CrystalCode\Php\Common\Scaffolding\DefaultDirectoryItem;
 use CrystalCode\Php\Common\Scaffolding\DefaultFileItem;
+use CrystalCode\Php\Common\Scaffolding\DefaultItemProcessor;
 use CrystalCode\Php\Common\Scaffolding\Instructions\CompositeInstruction;
 use CrystalCode\Php\Common\Scaffolding\Instructions\ExportInstructionProcessor;
-use CrystalCode\Php\Common\Scaffolding\DefaultItemProcessor;
 use CrystalCode\Php\Common\Templates\DefaultTemplateRenderer;
 use CrystalCode\Php\Common\Templates\TemplateRendererInterface;
 

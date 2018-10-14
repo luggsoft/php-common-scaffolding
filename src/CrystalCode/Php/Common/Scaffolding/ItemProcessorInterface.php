@@ -2,6 +2,8 @@
 
 namespace CrystalCode\Php\Common\Scaffolding;
 
+use CrystalCode\Php\Common\Scaffolding\Instructions\InstructionInterface;
+
 interface ItemProcessorInterface
 {
 
