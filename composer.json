@@ -14,7 +14,9 @@
         "crystalcode/php-common": "dev-master",
         "crystalcode/php-common-collections": "dev-master",
         "crystalcode/php-common-injectors": "dev-master",
-        "crystalcode/php-common-templates": "dev-master"
+        "crystalcode/php-common-json": "dev-master",
+        "crystalcode/php-common-templates": "dev-master",
+        "symfony/console": "^4.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4",
