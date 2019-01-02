@@ -4,9 +4,25 @@ namespace CrystalCode\Php\Common\Scaffolding\Scaffolders\Templates;
 
 use CrystalCode\Php\Common\Collections\Collector;
 use CrystalCode\Php\Common\Templates\TemplateInterface;
+use CrystalCode\Php\Common\ValuesObject;
 
 abstract class TemplateProviderBase implements TemplateProviderInterface
 {
+
+    /**
+     *
+     * @var TemplateInterface
+     */
+    private $defaultTemplate;
+
+    /**
+     * 
+     * @param TemplateInterface $defaultTemplate
+     */
+    public function __construct(TemplateInterface $defaultTemplate = null)
+    {
+        $this->defaultTemplate = $defaultTemplate;
+    }
 
     /**
      * 
@@ -14,22 +30,23 @@ abstract class TemplateProviderBase implements TemplateProviderInterface
      */
     final public function getTemplate($values): TemplateInterface
     {
-        if (!($values instanceof TemplateProviderValues)) {
-            $values = TemplateProviderValues::create($values);
-        }
-
+        $valuesObject = ValuesObject::create($values);
         $templateProviderEntries = $this->getTemplateProviderEntries();
 
         $templateProviderEntry = Collector::create($templateProviderEntries)
-          ->max(function (TemplateProviderEntryInterface $templateProviderEntry) use ($values) {
-            return $templateProviderEntry->getApplicability($values);
+          ->max(function (TemplateProviderEntryInterface $templateProviderEntry) use ($valuesObject) {
+            return $templateProviderEntry->getApplicability($valuesObject);
         });
 
         if ($templateProviderEntry === null) {
+            if ($this->defaultTemplate !== null) {
+                return $this->defaultTemplate;
+            }
+
             throw new TemplateProviderException();
         }
 
-        return $templateProviderEntry->getTemplate($values);
+        return $templateProviderEntry->getTemplate($valuesObject);
     }
 
     /**

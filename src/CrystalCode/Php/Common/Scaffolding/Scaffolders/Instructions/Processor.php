@@ -4,7 +4,7 @@ namespace CrystalCode\Php\Common\Scaffolding\Scaffolders\Instructions;
 
 use Exception;
 
-final class Processor implements ProcessorInterface
+final class Processor extends ProcessorBase
 {
 
     /**
@@ -25,28 +25,6 @@ final class Processor implements ProcessorInterface
     /**
      * 
      * {@inheritdoc}
-     */
-    public function processInstructions(iterable $instructions, ProcessorContext $processorContext = null): void
-    {
-        if ($processorContext === null) {
-            $processorContext = new ProcessorContext();
-        }
-
-        foreach ($instructions as $instruction) {
-            if ($this->processInstruction($instruction, $processorContext)) {
-                continue;
-            }
-
-            throw new Exception('Unhandled instruction');
-        }
-    }
-
-    /**
-     * 
-     * @param InstructionInterface $instruction
-     * @param ProcessorContext $processorContext
-     * @return bool
-     * @throws Exception
      */
     public function processInstruction(InstructionInterface $instruction, ProcessorContext $processorContext = null): bool
     {

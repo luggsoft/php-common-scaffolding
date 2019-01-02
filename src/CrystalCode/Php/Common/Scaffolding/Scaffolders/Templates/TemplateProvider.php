@@ -2,6 +2,8 @@
 
 namespace CrystalCode\Php\Common\Scaffolding\Scaffolders\Templates;
 
+use CrystalCode\Php\Common\Templates\TemplateInterface;
+
 final class TemplateProvider extends TemplateProviderBase
 {
 
@@ -13,10 +15,12 @@ final class TemplateProvider extends TemplateProviderBase
 
     /**
      * 
+     * @param TemplateInterface $defaultTemplate
      * @param iterable|TemplateProviderEntryInterface[] $templateProviderEntries
      */
-    public function __construct(TemplateProviderEntryInterface ...$templateProviderEntries)
+    public function __construct(?TemplateInterface $defaultTemplate, TemplateProviderEntryInterface ...$templateProviderEntries)
     {
+        parent::__construct($defaultTemplate);
         $this->templateProviderEntries = $templateProviderEntries;
     }
 

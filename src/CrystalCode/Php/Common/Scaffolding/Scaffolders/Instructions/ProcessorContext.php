@@ -45,6 +45,17 @@ final class ProcessorContext
 
     /**
      * 
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getValue(string $name, $default = null)
+    {
+        return $this->valuesObject->getValue($name, $default);
+    }
+
+    /**
+     * 
      * @return string
      */
     public function getMode(): string
