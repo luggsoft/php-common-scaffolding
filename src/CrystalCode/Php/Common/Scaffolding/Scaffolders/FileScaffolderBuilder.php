@@ -3,8 +3,8 @@
 namespace CrystalCode\Php\Common\Scaffolding\Scaffolders;
 
 use CrystalCode\Php\Common\ArgumentException;
-use CrystalCode\Php\Common\Scaffolding\Scaffolders\Templates\DelegateTemplateProvider;
-use CrystalCode\Php\Common\Scaffolding\Scaffolders\Templates\TemplateProviderInterface;
+use CrystalCode\Php\Common\Scaffolding\Templates\DelegateTemplateProvider;
+use CrystalCode\Php\Common\Scaffolding\Templates\TemplateProviderInterface;
 use CrystalCode\Php\Common\Templates\TemplateInterface;
 
 final class FileScaffolderBuilder extends ScaffolderBuilderBase
@@ -24,7 +24,7 @@ final class FileScaffolderBuilder extends ScaffolderBuilderBase
         }
 
         if ($contents instanceof TemplateProviderInterface) {
-            return new TemplateContentsProvider($templateProvider, $values);
+            return new TemplateContentsProvider($contents, $values);
         }
 
         if ($contents instanceof TemplateInterface) {

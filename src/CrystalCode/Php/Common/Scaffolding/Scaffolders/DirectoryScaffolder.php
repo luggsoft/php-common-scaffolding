@@ -19,7 +19,7 @@ class DirectoryScaffolder extends ScaffolderBase
 
     /**
      *
-     * @var ScaffoldersProviderInterface
+     * @var ScaffolderProviderInterface
      */
     private $scaffoldersProvider;
 
@@ -27,9 +27,9 @@ class DirectoryScaffolder extends ScaffolderBase
      * 
      * @param PathProviderInterface $pathProvider
      * @param PermissionsProviderInterface $permissionsProvider
-     * @param ScaffoldersProviderInterface $scaffoldersProvider
+     * @param ScaffolderProviderInterface $scaffoldersProvider
      */
-    public function __construct(PathProviderInterface $pathProvider, PermissionsProviderInterface $permissionsProvider, ScaffoldersProviderInterface $scaffoldersProvider = null)
+    public function __construct(PathProviderInterface $pathProvider, PermissionsProviderInterface $permissionsProvider, ScaffolderProviderInterface $scaffoldersProvider = null)
     {
         $this->pathProvider = $pathProvider;
         $this->permissionsProvider = $permissionsProvider;
@@ -56,9 +56,9 @@ class DirectoryScaffolder extends ScaffolderBase
 
     /**
      * 
-     * @return ScaffoldersProviderInterface
+     * @return ScaffolderProviderInterface
      */
-    public function getScaffoldersProvider(): ScaffoldersProviderInterface
+    public function getScaffoldersProvider(): ScaffolderProviderInterface
     {
         return $this->scaffoldersProvider;
     }

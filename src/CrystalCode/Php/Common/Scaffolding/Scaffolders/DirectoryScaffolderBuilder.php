@@ -10,10 +10,10 @@ final class DirectoryScaffolderBuilder extends ScaffolderBuilderBase
     /**
      * 
      * @param mixed $scaffolders
-     * @return ScaffoldersProviderInterface
+     * @return ScaffolderProviderInterface
      * @throws ArgumentException
      */
-    public static function normalizeScaffolders($scaffolders): ScaffoldersProviderInterface
+    public static function normalizeScaffolders($scaffolders): ScaffolderProviderInterface
     {
         if ($scaffolders instanceof ScaffoldersProviderInterface) {
             return $scaffolders;
@@ -60,7 +60,7 @@ final class DirectoryScaffolderBuilder extends ScaffolderBuilderBase
 
     /**
      *
-     * @var ScaffoldersProviderInterface
+     * @var ScaffolderProviderInterface
      */
     private $scaffoldersProvider;
 

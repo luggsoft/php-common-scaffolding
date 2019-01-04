@@ -2,7 +2,8 @@
 
 namespace CrystalCode\Php\Common\Scaffolding\Scaffolders;
 
-use CrystalCode\Php\Common\Scaffolding\Scaffolders\Templates\TemplateProviderInterface;
+use CrystalCode\Php\Common\Scaffolding\Templates\TemplateProviderInterface;
+use CrystalCode\Php\Common\Templates\TemplateContext;
 
 final class TemplateContentsProvider implements ContentsProviderInterface
 {
@@ -62,7 +63,8 @@ final class TemplateContentsProvider implements ContentsProviderInterface
      */
     public function getContents(): string
     {
-        $this->templateProvider->getTemplate($this->values);
+        $templateContext = new TemplateContext();
+        return $this->templateProvider->getTemplate($this->values)->render($templateContext);
     }
 
 }

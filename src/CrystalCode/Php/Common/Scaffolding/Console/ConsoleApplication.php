@@ -2,9 +2,11 @@
 
 namespace CrystalCode\Php\Common\Scaffolding\Console;
 
+use ReflectionClass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -57,7 +59,8 @@ final class ConsoleApplication extends Application
 
         yield (new Command('scaffold'))
             ->setCode([$this, 'executeScaffold'])
-            ->setDescription('Executes the provided scaffolder');
+            ->setDescription('Executes the provided scaffolder')
+            ->addOption('executor', null, InputOption::VALUE_REQUIRED, 'The fully qualified PHP class name of the Executor');
 
         yield (new Command('validate'))
             ->setCode([$this, 'executeValidate'])
@@ -72,7 +75,11 @@ final class ConsoleApplication extends Application
      */
     public function executeScaffold(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(__METHOD__);
+        $executorClassName = $input->getOption('executor');
+        $classReflection = new ReflectionClass($executorClassName);
+        $executor = $classReflection->newInstance();
+        $executor->execute();
+        $output->writeln(print_r($executor, true));
         return 0;
     }
 
