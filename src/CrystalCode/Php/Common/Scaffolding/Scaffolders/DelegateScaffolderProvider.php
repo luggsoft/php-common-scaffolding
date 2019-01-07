@@ -2,7 +2,7 @@
 
 namespace CrystalCode\Php\Common\Scaffolding\Scaffolders;
 
-final class DelegateScaffoldersProvider implements ScaffolderProviderInterface
+final class DelegateScaffolderProvider implements ScaffolderProviderInterface
 {
 
     /**

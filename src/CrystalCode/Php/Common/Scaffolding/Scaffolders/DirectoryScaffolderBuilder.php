@@ -20,11 +20,11 @@ final class DirectoryScaffolderBuilder extends ScaffolderBuilderBase
         }
 
         if (is_callable($scaffolders)) {
-            return new DelegateScaffoldersProvider($scaffolders);
+            return new DelegateScaffolderProvider($scaffolders);
         }
 
         if (is_array($scaffolders)) {
-            return new DelegateScaffoldersProvider(function () use ($scaffolders) {
+            return new DelegateScaffolderProvider(function () use ($scaffolders) {
                 foreach ($scaffolders as $scaffolder) {
                     yield $scaffolder;
                 }

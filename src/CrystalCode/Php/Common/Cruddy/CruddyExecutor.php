@@ -22,7 +22,7 @@ use CrystalCode\Php\Common\Cruddy\Templates\States\SelectStateHtmlTemplateProvid
 use CrystalCode\Php\Common\Cruddy\Templates\States\ViewDetailStateCtrlTemplateProviderEntry;
 use CrystalCode\Php\Common\Cruddy\Templates\States\ViewDetailStateHtmlTemplateProviderEntry;
 use CrystalCode\Php\Common\Scaffolding\ExecutorBase;
-use CrystalCode\Php\Common\Scaffolding\Scaffolders\DelegateScaffoldersProvider;
+use CrystalCode\Php\Common\Scaffolding\Scaffolders\DelegateScaffolderProvider;
 use CrystalCode\Php\Common\Scaffolding\Scaffolders\DirectoryScaffolderBuilder;
 use CrystalCode\Php\Common\Scaffolding\Scaffolders\FileScaffolderBuilder;
 use CrystalCode\Php\Common\Scaffolding\Instructions\DebugInstructionHandlerDelegateProvider;
@@ -66,7 +66,7 @@ final class CruddyExecutor extends ExecutorBase
      */
     public function getScaffolderProvider(): ScaffolderProviderInterface
     {
-        return new DelegateScaffoldersProvider(function () {
+        return new DelegateScaffolderProvider(function () {
             yield DirectoryScaffolderBuilder::create()
                 ->withPath('services')
                 ->withScaffolders(function () {

@@ -13,15 +13,6 @@ abstract class ExecutorBase implements ExecutorInterface
 
     /**
      * 
-     * @todo
-     */
-    final public function __construct()
-    {
-        // @TODO
-    }
-
-    /**
-     * 
      * @return void
      */
     final public function execute(): void
